@@ -1,33 +1,7 @@
 #!/bin/bash
-
-# Install prerequisites
-apt-get update
-apt-get install -y curl gnupg2 iptables
-
-# Install tightvncserver
-apt-get install -y tightvncserver
-
-# Install GNOME desktop environment
-apt-get install -y gnome-core
-
-# Install Firefox browser
-apt-get install -y firefox
-
-# Install noVNC
-cd /tmp
-git clone https://github.com/novnc/noVNC.git /opt/noVNC
-git clone https://github.com/novnc/websockify /opt/noVNC/utils/websockify
-
-# Setup VNC password
+apt update -y && apt install -y firefox gnome-core tightvncserver curl gnupg2 iptables 
 echo -e "password\npassword" | vncpasswd
-
-# Start VNC server
 tightvncserver :1
-
-# Configure port forwarding for VNC and noVNC
-iptables -A INPUT -p tcp --dport 5901 -j ACCEPT
-iptables -A INPUT -p tcp --dport 8080 -j ACCEPT
-iptables-save > /etc/iptables/rules.v4
-
-# Run noVNC
-/opt/noVNC/utils/launch.sh --vnc localhost:5901 --listen 8080 &
+echo "function vncstart {
+    tightvncserver :1
+}"> ~/.bashrc.
